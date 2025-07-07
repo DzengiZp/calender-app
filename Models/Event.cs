@@ -1,5 +1,4 @@
 using System.Text.Json.Serialization;
-using precio_summer_project.Dtos.Requests.Events;
 
 namespace precio_summer_project.Models;
 
