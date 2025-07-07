@@ -5,5 +5,5 @@ namespace precio_summer_project.Repositories.Events;
 
 public interface IEventRepository
 {
-    Task AddEventAsync(Event calendarEvent);
+    Task AddAsync(Event calendarEvent);
 }
