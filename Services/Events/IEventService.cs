@@ -7,4 +7,5 @@ namespace precio_summer_project.Services.Events;
 public interface IEventService
 {
     public Task CreateEventAsync(AddEventRequest request);
+    public Task DeleteEventAsync(Guid id);
 }

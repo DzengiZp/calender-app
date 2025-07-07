@@ -7,7 +7,7 @@ using precio_summer_project.Repositories.Events;
 
 namespace precio_summer_project.Services.Events;
 
-public class EventService(IEventRepository repository) : IEventService
+public class EventService(IEventRepository eventRepository) : IEventService
 {
     public async Task CreateEventAsync(AddEventRequest request)
     {
@@ -35,10 +35,19 @@ public class EventService(IEventRepository repository) : IEventService
         if (dateEnd.CompareTo(dateStart) < 0)
             throw new EventEndDateException();
 
-        // var calendarEvent = EventMapper.ToModel<AddEventRequest>(request);
-
         var calendarEvent = GenericMapper<Event>.Map(request);
 
-        await repository.AddAsync(calendarEvent);
+        await eventRepository.AddAsync(calendarEvent);
+    }
+
+    public async Task DeleteEventAsync(Guid id)
+    {
+        if (id == Guid.Empty)
+            throw new ArgumentNullException(nameof(id), "Id can't be empty");
+
+        var eventsDeleted = await eventRepository.DeleteAsync(id);
+
+        if (eventsDeleted == 0)
+            throw new EventNotFoundException();
     }
 }
