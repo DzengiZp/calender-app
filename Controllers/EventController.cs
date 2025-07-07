@@ -86,4 +86,18 @@ public class EventController(IEventService eventService, ILogger<EventController
             return BadRequest(ApiResponse.Error(400, error));
         }
     }
+
+    [HttpPatch("patch")]
+    public async Task<IActionResult> Patch([FromBody] UpdateEventRequest request)
+    {
+        try
+        {
+            await eventService.PatchEventAsync(request);
+            return Ok();
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
+    }
 }
