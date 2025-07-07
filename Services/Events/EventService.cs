@@ -9,7 +9,7 @@ namespace precio_summer_project.Services.Events;
 
 public class EventService(IEventRepository repository) : IEventService
 {
-    public async Task ValidateEventDataAsync(AddEventRequest request)
+    public async Task CreateEventAsync(AddEventRequest request)
     {
         var dateStart = request.EventDateStart;
         var dateEnd = request.EventDateEnd;
@@ -35,8 +35,10 @@ public class EventService(IEventRepository repository) : IEventService
         if (dateEnd.CompareTo(dateStart) < 0)
             throw new EventEndDateException();
 
-        var calendarEvent = EventMapper.ToModel<AddEventRequest>(request);
+        // var calendarEvent = EventMapper.ToModel<AddEventRequest>(request);
 
-        await repository.AddEventAsync(calendarEvent);
+        var calendarEvent = GenericMapper<Event>.Map(request);
+
+        await repository.AddAsync(calendarEvent);
     }
 }

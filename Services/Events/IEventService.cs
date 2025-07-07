@@ -6,5 +6,5 @@ namespace precio_summer_project.Services.Events;
 
 public interface IEventService
 {
-    public Task ValidateEventDataAsync(AddEventRequest request);
+    public Task CreateEventAsync(AddEventRequest request);
 }
