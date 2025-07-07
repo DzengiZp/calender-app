@@ -61,4 +61,29 @@ public class EventController(IEventService eventService, ILogger<EventController
             return BadRequest(ApiResponse.Error(400, error));
         }
     }
+
+    [HttpDelete("delete/{id}")]
+    public async Task<IActionResult> Delete(Guid id)
+    {
+        try
+        {
+            await eventService.DeleteEventAsync(id);
+
+            return Ok(ApiResponse.Success(200, "Succesfully deleted event"));
+        }
+        catch (ArgumentNullException ex)
+        {
+            return BadRequest(ApiResponse.Error(400, ex.Message));
+        }
+        catch (EventNotFoundException ex)
+        {
+            return NotFound(ApiResponse.Error(404, ex.Message));
+        }
+        catch (Exception ex)
+        {
+            var error = "Something went wrong while deleting an event";
+            logger.LogError("{error} exception: {ex}", error, ex);
+            return BadRequest(ApiResponse.Error(400, error));
+        }
+    }
 }
