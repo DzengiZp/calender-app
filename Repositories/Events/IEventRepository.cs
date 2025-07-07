@@ -6,4 +6,5 @@ namespace precio_summer_project.Repositories.Events;
 public interface IEventRepository
 {
     Task AddAsync(Event calendarEvent);
+    Task<int> DeleteAsync(Guid id);
 }
