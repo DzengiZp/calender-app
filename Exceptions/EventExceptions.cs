@@ -24,3 +24,6 @@ public class EventEndTimeException(
 public class EventEndDateException(
     string exception = "Event ending date can't be earlier than event starting date"
 ) : Exception(exception);
+
+public class EventNotFoundException(string exception = "Could not find event")
+    : Exception(exception);
