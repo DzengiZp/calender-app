@@ -8,4 +8,5 @@ public interface IEventService
 {
     public Task CreateEventAsync(AddEventRequest request);
     public Task DeleteEventAsync(Guid id);
+    public Task PatchEventAsync(UpdateEventRequest request);
 }

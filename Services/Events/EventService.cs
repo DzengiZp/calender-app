@@ -50,4 +50,53 @@ public class EventService(IEventRepository eventRepository) : IEventService
         if (eventsDeleted == 0)
             throw new EventNotFoundException();
     }
+
+    public async Task PatchEventAsync(UpdateEventRequest request)
+    {
+        if (request.Id == Guid.Empty)
+            throw new ArgumentNullException(nameof(request), "Id can't be empty");
+
+        var calendarEvent =
+            await eventRepository.GetAsync(request.Id) ?? throw new EventNotFoundException();
+
+        // Only update if present AND different
+        if (!string.IsNullOrWhiteSpace(request.Name) && request.Name != calendarEvent.Name)
+            calendarEvent.Name = request.Name;
+
+        if (
+            !string.IsNullOrWhiteSpace(request.Description)
+            && request.Description != calendarEvent.Description
+        )
+            calendarEvent.Description = request.Description;
+
+        if (
+            !string.IsNullOrWhiteSpace(request.Location)
+            && request.Location != calendarEvent.Location
+        )
+            calendarEvent.Location = request.Location;
+
+        if (
+            request.EventDateStart.HasValue
+            && request.EventDateStart != calendarEvent.EventDateStart
+        )
+        {
+            if (request.EventDateStart.Value < DateTime.UtcNow)
+                throw new EventStartDateException();
+
+            calendarEvent.EventDateStart = request.EventDateStart.Value;
+        }
+
+        if (request.EventDateEnd.HasValue && request.EventDateEnd != calendarEvent.EventDateEnd)
+        {
+            if (request.EventDateEnd.Value < calendarEvent.EventDateStart)
+                throw new EventEndDateException();
+
+            calendarEvent.EventDateEnd = request.EventDateEnd.Value;
+        }
+
+        if (request.IsInPerson.HasValue && request.IsInPerson.Value != calendarEvent.IsInPerson)
+            calendarEvent.IsInPerson = request.IsInPerson.Value;
+
+        await eventRepository.UpdateAsync(calendarEvent);
+    }
 }
