@@ -16,4 +16,15 @@ public class EventRepository(AppDbContext context) : IEventRepository
     {
         return await context.Events.Where(e => e.Id == id).ExecuteDeleteAsync();
     }
+
+    public async Task<Event?> GetAsync(Guid id)
+    {
+        return await context.Events.AsNoTracking().Where(e => e.Id == id).FirstOrDefaultAsync();
+    }
+
+    public async Task UpdateAsync(Event calendarEvent)
+    {
+        context.Events.Update(calendarEvent);
+        await context.SaveChangesAsync();
+    }
 }
